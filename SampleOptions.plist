@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>DryRun</key>
+	<false/>
+	<key>HTTPAuthUser</key>
+	<string>user</string>
+	<key>HTTPAuthPassword</key>
+	<string>password</string>
+	<key>HashCheckPolicy</key>
+	<string>Strict</string>
+	<key>IASPath</key>
+	<string>/Library/installapplications</string>
+	<key>Identifier</key>
+	<string>cz.macadmin.ias</string>
+	<key>JSONURL</key>
+	<string>http://127.0.0.1:8080/installapplications-testing.json</string>
+	<key>LaunchDaemonIdentifier</key>
+	<string>cz.macadmin.iasd</string>
+	<key>LaunchAgentIdentifier</key>
+	<string>cz.macadmin.iasagent</string>
+	<key>MinimumDownloadConcurrency</key>
+	<integer>1</integer>
+	<key>MaximumDownloadConcurrency</key>
+	<integer>4</integer>
+	<key>MaximumRedownloads</key>
+	<integer>3</integer>
+	<key>Reboot</key>
+	<false/>
+	<key>SkipJSONValidation</key>
+	<false/>
+</dict>
+</plist>
