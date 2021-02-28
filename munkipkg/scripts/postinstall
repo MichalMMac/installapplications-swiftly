@@ -1,0 +1,57 @@
+#!/bin/zsh
+#
+# Copyright 2021-Present Michal Moravec.
+# Copyright 2017-2020 Erik Gomez.
+#
+# Licensed under the Apache License, Version 2.0 (the 'License');
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an 'AS IS' BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# If you change your daemon and agent file names, update the following two lines
+launch_agent_id='cz.macadmin.iasagent'
+launch_daemon_id='cz.macadmin.iasd'
+
+# Base paths
+launch_agent_base_path='Library/LaunchAgents/'
+launch_daemon_base_path='Library/LaunchDaemons/'
+
+# Run the rest of this script only on a running OS
+if [[ "${3}" == "/" ]] ; then
+    base_path="${3}"
+elif [[ "${3}" == "/System/Volumes/Data" ]] ; then
+    base_path="${3}/"
+else
+    exit 0
+fi
+
+# Fail the install if the admin forgets to change their paths and they don't exist.
+if [ ! -e "${base_path}${launch_daemon_base_path}${launch_daemon_id}.plist" ] || [ ! -e "${base_path}${launch_agent_base_path}${launch_agent_id}.plist" ]; then
+    echo "LaunchAgent or Daemon missing, exiting"
+    exit 1
+fi
+
+# Enable the LaunchDaemon
+/bin/launchctl bootstrap system "${base_path}${launch_daemon_base_path}${launch_daemon_id}.plist"
+
+# Current console user information
+console_user=$(/usr/bin/stat -f "%Su" /dev/console)
+console_user_uid=$(/usr/bin/id -u "${console_user}")
+
+# Only enable the LaunchAgent if there is a user logged in, otherwise rely on built in LaunchAgent behavior
+if [[ -z "$console_user" ]]; then
+    echo "Did not detect user"
+elif [[ "$console_user" == "loginwindow" ]]; then
+    echo "Detected Loginwindow Environment"
+elif [[ "$console_user" == "_mbsetupuser" ]]; then
+    echo "Detected SetupAssistant Environment"
+else
+    /bin/launchctl bootstrap "gui/${console_user_uid}" "${base_path}${launch_agent_base_path}${launch_agent_id}.plist"
+fi

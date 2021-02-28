@@ -1,0 +1,57 @@
+#!/bin/zsh
+#
+# Copyright 2021-Present Michal Moravec.
+# Copyright 2017-2020 Erik Gomez.
+#
+# Licensed under the Apache License, Version 2.0 (the 'License');
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an 'AS IS' BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# If you change your daemon and agent file names, update the following two lines
+launch_agent_id='cz.macadmin.iasagent'
+launch_daemon_id='cz.macadmin.iasd'
+
+# Base paths
+launch_agent_base_path='Library/LaunchAgents/'
+launch_daemon_base_path='Library/LaunchDaemons/'
+
+# Run the rest of this script only on a running OS
+if [[ "${3}" == "/" ]] ; then
+    base_path="${3}"
+elif [[ "${3}" == "/System/Volumes/Data" ]] ; then
+    base_path="${3}/"
+else
+    exit 0
+fi
+
+# Current console user information
+console_user=$(/usr/bin/stat -f "%Su" /dev/console)
+console_user_uid=$(/usr/bin/id -u "${console_user}")
+
+# Attempt to unload the daemon if it's stuck in memory but gone from disk
+/bin/launchctl print system | /usr/bin/grep --quiet "${launch_daemon_id}"
+if [[ $? -eq 0 ]] && [[ ! -e "${base_path}${launch_daemon_base_path}${launch_daemon_id}.plist" ]]; then
+    /bin/launchctl bootout "system/${launch_daemon_id}"
+fi
+
+if [[ -z "$console_user" ]]; then
+    echo "Did not detect user"
+elif [[ "$console_user" == "loginwindow" ]]; then
+    echo "Detected Loginwindow Environment"
+elif [[ "$console_user" == "_mbsetupuser" ]]; then
+    echo "Detected SetupAssistant Environment"
+else
+  # Attempt to unload the agent if it's stuck in memory but gone from disk
+    /bin/launchctl print "gui/${console_user_uid}" | /usr/bin/grep --quiet '${launch_agent_id}'
+    if [[ $? -eq 0 ]] && [[ ! -e "${base_path}${launch_agent_base_path}${launch_agent_id}.plist" ]]; then
+        /bin/launchctl bootout "gui/${console_user_uid}/${launch_agent_id}"
+    fi
+fi

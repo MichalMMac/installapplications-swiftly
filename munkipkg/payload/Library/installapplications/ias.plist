@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>JSONURL</key>
+	<string>https://your.webserver.tld/installapplications.json</string>
+	<key>HashCheckPolicy</key>
+	<string>Strict</string>	
+	<key>HTTPAuthUser</key>
+	<string>user</string>
+	<key>HTTPAuthPassword</key>
+	<string>password</string>
+	<key>MaximumDownloadConcurrency</key>
+	<integer>4</integer>
+</dict>
+</plist>
