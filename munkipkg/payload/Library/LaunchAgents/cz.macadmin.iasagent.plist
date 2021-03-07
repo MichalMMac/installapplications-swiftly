@@ -10,10 +10,7 @@
     <array>
         <string>Aqua</string>
     </array>
-    <key>MachServices</key>
-    <dict>
-        <key>cz.macadmin.ias.agent.xpc</key>
-        <true/>
-    </dict>
+    <key>RunAtLoad</key>
+    <true/>
 </dict>
 </plist>
