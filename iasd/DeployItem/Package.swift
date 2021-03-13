@@ -34,7 +34,7 @@ class Package: DeployItem {
 
         task.executableURL = URL(fileURLWithPath: "/usr/sbin/pkgutil")
         task.arguments = ["--pkg-info-plist", packageID!]
-        if executeProcess(task: task, logger: logger, async: false, output: &plistOutput) != 0 {
+        if executeProcess(task: task, logger: logger, async: false, output: &plistOutput, printStderr: false) != 0 {
             logger.log("\(self.name, privacy: .public): Package receipt not found")
             return false
         }
