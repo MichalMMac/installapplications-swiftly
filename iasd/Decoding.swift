@@ -144,9 +144,9 @@ struct Options: Decodable {
     var dryRun: Bool { return _dryRun ?? false }
     var hashCheckPolicy: HashCheckPolicy { return _hashCheckPolicy ?? HashCheckPolicy.strict }
     var iasPath: String { return _iasPath ?? "/Library/installapplications" }
-    var identifier: String { return _identifier ?? DEFAULT_INTENFIER }
-    var launchDaemonIdentifier: String { return _launchDaemonIdentifier ?? DEFAULT_DEAMON_INTENFIER }
-    var launchAgentIdentifier: String { return _launchAgentIdentifier ?? DEFAULT_AGENT_INTENFIER }
+    var identifier: String { return _identifier ?? defaultIdentifier }
+    var launchDaemonIdentifier: String { return _launchDaemonIdentifier ?? defaultDaemonIdentifier }
+    var launchAgentIdentifier: String { return _launchAgentIdentifier ?? defaultAgentIdentifier }
     var minDownloadConcurrency: Int { return _minDownloadConcurrency ?? 1 }
     var maxDownloadConcurrency: Int { return _maxDownloadConcurrency ?? 4 }
     var reboot: Bool { return _reboot ?? false }
@@ -157,7 +157,7 @@ struct Options: Decodable {
 
 func loadOptions(fromFile configFile: URL) -> Options {
     let options: Options?
-    let logger = Logger(subsystem: DEFAULT_INTENFIER, category: "main")
+    let logger = Logger(subsystem: defaultIdentifier, category: "main")
     do {
         let configFileContents = try Data(contentsOf: configFile)
         options = try PropertyListDecoder().decode(Options.self, from: configFileContents)

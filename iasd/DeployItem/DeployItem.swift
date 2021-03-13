@@ -23,7 +23,7 @@ class DeployItem: NSObject, URLSessionTaskDelegate, URLSessionDownloadDelegate  
 
     // Class shared part
     static let fileManager = FileManager()
-    static let logger = Logger(subsystem: DEFAULT_DEAMON_INTENFIER, category: "allitems")
+    static let logger = Logger(subsystem: defaultDaemonIdentifier, category: "allitems")
 
     static var concurrencySemaphore = DispatchSemaphore(value: 1)
     static var concurrencyManipulationSemaphore = DispatchSemaphore(value: 1)
