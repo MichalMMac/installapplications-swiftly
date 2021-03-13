@@ -8,12 +8,12 @@
 import Foundation
 import os
 
-func executeProcess(task: Process, logger: Logger, async: Bool) -> Int {
+func executeProcess(task: Process, logger: Logger, async: Bool, printStderr: Bool = true, printStdout: Bool = true) -> Int {
     var output = ""
-    return executeProcess(task: task, logger: logger, async: async, output: &output, printStdout: true)
+    return executeProcess(task: task, logger: logger, async: async, output: &output, printStderr: printStderr, printStdout: printStdout)
 }
 
-func executeProcess(task: Process, logger: Logger, async: Bool, output: inout String, printStdout: Bool = false) -> Int {
+func executeProcess(task: Process, logger: Logger, async: Bool, output: inout String, printStderr: Bool = true, printStdout: Bool = false) -> Int {
     let stdout = Pipe()
     let stderr = Pipe()
     task.standardOutput = stdout
@@ -36,7 +36,7 @@ func executeProcess(task: Process, logger: Logger, async: Bool, output: inout St
         if !out.isEmpty && printStdout {
             logger.log("Output on stdout: \(out, privacy: .public)")
         }
-        if !errout.isEmpty {
+        if !errout.isEmpty && printStderr {
             logger.error("Output on stderr: \(errout, privacy: .public)")
         }
         return Int(task.terminationStatus)
