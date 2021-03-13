@@ -51,12 +51,6 @@
             ReferencedContainer = "container:installapplications-swiftly.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
-      <CommandLineArguments>
-         <CommandLineArgument
-            argument = "&quot;/Users/michal/Library/Mobile Documents/com~apple~CloudDocs/iBox/MacAdmin/Projekty/ias2/SampleOptions.plist&quot;"
-            isEnabled = "YES">
-         </CommandLineArgument>
-      </CommandLineArguments>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
