@@ -124,9 +124,6 @@ class InstallApplicationSwiftly {
     }
 
     func finish() {
-        // WIP DEBUG return. No cleaning up yet.
-        return
-
         logger.log("Cleaning UP")
 
         logger.info("Attempting to remove LaunchDaemon \(self.launchDaemonPlist.path, privacy: .public)")
@@ -136,7 +133,13 @@ class InstallApplicationSwiftly {
         try? fileManager.removeItem(at: self.launchAgentPlist)
 
         // Unload LaunchAgent
-        // TODO
+        if xpcServer!.agentConnector.connection != nil && xpcServer!.agentConnector.uid != nil {
+            logger.info("Attempting to unload LaunchAgent \(self.options.launchAgentIdentifier, privacy: .public)")
+            let agentUnload = Process()
+            agentUnload.executableURL = URL(fileURLWithPath: "/bin/launchctl")
+            agentUnload.arguments = ["bootout", "gui/\(String(xpcServer!.agentConnector.uid!))/\(self.options.launchAgentIdentifier)"]
+            _ = executeProcess(task: agentUnload, logger: logger, async: false)
+        }
 
         // Clean UP IAS directory
         try? fileManager.removeItem(atPath: options.iasPath)
@@ -144,18 +147,23 @@ class InstallApplicationSwiftly {
         // Trigger delayed reboot
         if options.reboot {
             logger.log("Triggering reboot")
-            // TODO
+            let delayedReboot = Process()
+            delayedReboot.executableURL = URL(fileURLWithPath: "/bin/zsh")
+            delayedReboot.arguments = ["-c", "sleep 5; /bin/launchctl reboot system"]
+            _ = executeProcess(task: delayedReboot, logger: logger, async: true)
         }
 
-        //logger.info("Attempting to remove LaunchAgent \(self.launchAgentPlist.path)")
-        //try? fileManager.removeItem(atPath: options.iasPath)
-
         // Unload LaunchDaemon
-        // TODO
+        logger.info("Attempting to unload LaunchDaemon \(self.options.launchDaemonIdentifier, privacy: .public)")
+        let daemonUnload = Process()
+        daemonUnload.executableURL = URL(fileURLWithPath: "/bin/launchctl")
+        daemonUnload.arguments = ["bootout", "system/\(self.options.launchDaemonIdentifier)"]
+        _ = executeProcess(task: daemonUnload, logger: logger, async: true)
     }
 
     func quit(exitCode: Int) {
         finish()
+        logger.log("Exiting with code: \(exitCode, privacy: .public)")
         exit(Int32(exitCode))
     }
 }
@@ -167,7 +175,7 @@ ias.beginRun()
 
 /*
  If the last task is a donotwait script there is a race condition when finish() deletes the file before task.run()
- loads the script from file and start executing.
+ loads the script from file and starts executing.
  */
 sleep(5)
 
