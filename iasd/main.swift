@@ -17,8 +17,11 @@ class InstallApplicationSwiftly {
     let logger: Logger
     let options: Options
 
+    var xpcServer: DaemonXPCServer?
+    var xpcListner: NSXPCListener?
+
     init() {
-        // Load options from file
+        // Load settings
         let arguments = CommandLine.arguments
         if arguments.count > 1 {
             configFile = URL(fileURLWithPath: arguments[1])
@@ -27,10 +30,19 @@ class InstallApplicationSwiftly {
         }
         options = loadOptions(fromFile: configFile)
 
+        // Set variables
         logger = Logger(subsystem: options.identifier, category: "main")
         fileManager = FileManager()
         launchDaemonPlist = URL(fileURLWithPath: "/Library/LaunchDaemons").appendingPathComponent(options.launchDaemonIdentifier).appendingPathExtension("plist")
         launchAgentPlist = URL(fileURLWithPath: "/Library/LaunchAgents").appendingPathComponent(options.launchAgentIdentifier).appendingPathExtension("plist")
+    }
+
+    func startXPCListener() {
+        xpcServer = DaemonXPCServer()
+        xpcListner = NSXPCListener(machServiceName: xpcServiceIdentifier)
+
+        xpcListner!.delegate = xpcServer;
+        xpcListner!.resume()
     }
 
     func checkRoot() {
@@ -107,7 +119,7 @@ class InstallApplicationSwiftly {
         // Run SetupAssistant phase
         setupAssistantPhase.begin()
 
-        // Run Preflight phase
+        // Run Userland phase
         userlandPhase.begin()
     }
 
@@ -150,6 +162,7 @@ class InstallApplicationSwiftly {
 
 let ias = InstallApplicationSwiftly()
 ias.checkRoot()
+ias.startXPCListener()
 ias.beginRun()
 
 /*

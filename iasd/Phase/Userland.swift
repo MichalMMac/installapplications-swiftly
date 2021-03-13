@@ -34,8 +34,7 @@ class Userland: Phase {
             logger.log("No Userland items found. Skipping")
             return
         }
-        let agent = AgentXPCConnection()
-        agent.establishConnection()
+        ias.xpcServer!.waitForConnection()
         runItems()
     }
 }

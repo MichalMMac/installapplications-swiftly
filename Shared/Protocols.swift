@@ -7,7 +7,10 @@
 
 import Foundation
 
-@objc(IAAgentXPCProtocol) protocol IAAgentXPCProtocol {
-  func executeUserScript(scriptURL: URL, async: Bool, withReply reply: @escaping (Int) -> Void)
-  func agentIsAlive(withReply reply: @escaping (Bool) -> Void)
+@objc(IASDaemonXPCProtocol) protocol IASDaemonXPCProtocol {
+    func agentCheckIn(agentEndpoint: NSXPCListenerEndpoint, agentUID: Int, withReply reply: @escaping (Bool) -> Void)
+}
+
+@objc(IASAgentXPCProtocol) protocol IASAgentXPCProtocol {
+  func executeUserScript(scriptURL: URL, identifier: String, async: Bool, withReply reply: @escaping (Int) -> Void)
 }

@@ -16,13 +16,10 @@ class UserScript: DeployItem {
             return
         }
 
-        let agent = AgentXPCConnection()
-        agent.establishConnection()
-
-        if ias.options.dryRun{
+        if ias.options.dryRun {
             logger.log("\(self.name, privacy: .public): Dry run executing user script \(self.filePath, privacy: .public)")
         } else {
-            returnCode = agent.runUserScript(scriptURL: fileURL, async: async)
+            returnCode = ias.xpcServer!.runUserScript(scriptURL: fileURL, async: async)
         }
         if returnCode != 0 {
             logger.error("\(self.name, privacy: .public) User script exited with non zero code \(self.returnCode, privacy: .public)")

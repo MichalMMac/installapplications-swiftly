@@ -118,6 +118,7 @@ struct Options: Decodable {
         case _reboot = "Reboot"
         case _redownloads = "MaximumRedownloads"
         case _skipJSONValidation = "SkipJSONValidation"
+        case _waitForAgentTimeout = "WaitForAgentTimeout"
         case httpAuthPassword = "HTTPAuthPassword"
         case httpAuthUser = "HTTPAuthUser"
         case jsonURL = "JSONURL"
@@ -134,6 +135,7 @@ struct Options: Decodable {
     private var _reboot: Bool?
     private var _redownloads: Int?
     private var _skipJSONValidation: Bool?
+    private var _waitForAgentTimeout: Int?
 
     var jsonURL: String
     var httpAuthPassword: String?
@@ -150,6 +152,7 @@ struct Options: Decodable {
     var reboot: Bool { return _reboot ?? false }
     var redownloads: Int { return _redownloads ?? 3 }
     var skipJSONValidation: Bool { return _skipJSONValidation ?? false }
+    var waitForAgentTimeout: Int { return _waitForAgentTimeout ?? 86400 }
 }
 
 func loadOptions(fromFile configFile: URL) -> Options {
