@@ -24,13 +24,12 @@ func executeProcess(task: Process, logger: Logger, async: Bool, output: inout St
     } catch {
         logger.error("Failure running task \(task.arguments!, privacy: .public)")
         logger.error("\(String(describing: error), privacy: .public)")
-        // Spíše return?
-        //exit(1)
+        return 1
     }
     if !async {
         logger.debug("Waiting for script to finish")
         task.waitUntilExit()
-        //TODO lepší handling outputu možná v samostatném threadu?
+        // TODO print output as it comes in using separate thread?
         let out = String(data: stdout.fileHandleForReading.readDataToEndOfFile(), encoding: .utf8)!
         output = out
         let errout = String(data: stderr.fileHandleForReading.readDataToEndOfFile(), encoding: .utf8)!
