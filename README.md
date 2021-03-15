@@ -156,26 +156,26 @@ Inspect `man pkgbuild` and  corresponding `munkipkg` [documentation](https://git
 
 Settings are provided by configuration plist file (section [Adding the configuration](#adding-the-configuration)).
 
-Setting key                | Default value                  | Type    | Description
--------------------------- | ------------------------------ | ------- | ------------
-**General settings**       |                                |         |
-HTTPAuthPassword           |                                | String  | Password for HTTP Basic or HTTP Digest authentication. Applied to all HTTP authentication challenges.
-HTTPAuthUser               |                                | String  | Username for HTTP Basic or HTTP Digest authentication. Applied to all HTTP authentication challenges.
-JSONURL                    |                                | String  | **REQUIRED** URL of the JSON control file. HTTPS strongly recommended. If you want to use `SkipJSONValidation` setting and include the JSON control file inside the IAS package you can provide any url but the last component of this URL must match the file name of the JSON control file.
-Reboot                     | false                          | Bool    | When true `iasd` will initiate macOS reboot before it exits.
-**Customization**          |                                |         |
-HashCheckPolicy            | Strict                         | String  | Can be either `Strict`, `Warning` or `Ignore`. See section [Hack check policy](#hack-check-policy).
-IASPath                    | `/Library/installapplications` | String  | IAS main directory. `iasd` ensures this directory is created (including the `userscripts` subdirectory) before downloading the JSON control file. `iasd` also deletes this directory during the cleanup.
-Identifier                 | `cz.macadmin.ias`              | String  | IAS identifier. See section [Identifiers](#identifiers) for more information.
-LaunchDaemonIdentifier     | `cz.macadmin.iasd`             | String  | IAS LaunchDaemon identifier. See section [Identifiers](#identifiers) for more information.
-LaunchAgentIdentifier      | `cz.macadmin.iasagent`         | String  | IAS LaunchAgent identifier. See section [Identifiers](#identifiers) for more information.
-MinimumDownloadConcurrency | 1                              | Integer | See section [Parallel downloads](#parallel-downloads) for more information.
-MaximumDownloadConcurrency | 4                              | Integer | See section [Parallel downloads](#parallel-downloads) for more information.
-MaximumRedownloads         | 3                              | Integer | Maximum number of redownload attempts.
-SkipJSONValidation         | false                          | Bool    | When true the JSON control file is not deleted and redowloaded if found inside the `IASPath` directory at begging of the `iasd` run.
-WaitForAgentTimeout        | 86400                          | Integer | Amount of time in seconds indicating how long `iasd` is willing to wait for `iasagent` to connect when beginning the userland phase. When reached, `iasd` exits without doing the clean up.
-**Troubleshooting**        |                                |         |
-DryRun                     | false                          | Bool    | When true `iasd` downloads all the items but nothing is installed/executed. If the userland phase is present `iasd` waits for agent to connect (Issue #11).
+Setting key            | Default value                  | Type    | Description
+---------------------- | ------------------------------ | ------- | ------------
+**General settings**   |                                |         |
+HTTPAuthPassword       |                                | String  | Password for HTTP Basic or HTTP Digest authentication. Applied to all HTTP authentication challenges.
+HTTPAuthUser           |                                | String  | Username for HTTP Basic or HTTP Digest authentication. Applied to all HTTP authentication challenges.
+JSONURL                |                                | String  | **REQUIRED** URL of the JSON control file. HTTPS strongly recommended. If you want to use `SkipJSONValidation` setting and include the JSON control file inside the IAS package you can provide any url but the last component of this URL must match the file name of the JSON control file.
+Reboot                 | false                          | Bool    | When true `iasd` will initiate macOS reboot before it exits.
+**Customization**      |                                |         |
+HashCheckPolicy        | Strict                         | String  | Can be either `Strict`, `Warning` or `Ignore`. See section [Hack check policy](#hack-check-policy).
+InstallPath            | `/Library/installapplications` | String  | IAS main directory. `iasd` ensures this directory is created (including the `userscripts` subdirectory) before downloading the JSON control file. `iasd` also deletes this directory during the cleanup.
+Identifier             | `cz.macadmin.ias`              | String  | IAS identifier. See section [Identifiers](#identifiers) for more information.
+LaunchDaemonIdentifier | `cz.macadmin.iasd`             | String  | IAS LaunchDaemon identifier. See section [Identifiers](#identifiers) for more information.
+LaunchAgentIdentifier  | `cz.macadmin.iasagent`         | String  | IAS LaunchAgent identifier. See section [Identifiers](#identifiers) for more information.
+MinDownloadConcurrency | 1                              | Integer | See section [Parallel downloads](#parallel-downloads) for more information.
+MaxDownloadConcurrency | 4                              | Integer | See section [Parallel downloads](#parallel-downloads) for more information.
+MaximumRedownloads     | 3                              | Integer | Maximum number of redownload attempts.
+SkipJSONValidation     | false                          | Bool    | When true the JSON control file is not deleted and redowloaded if found inside the `InstallPath` directory at begging of the `iasd` run.
+WaitForAgentTimeout    | 86400                          | Integer | Amount of time in seconds indicating how long `iasd` is willing to wait for `iasagent` to connect when beginning the userland phase. When reached, `iasd` exits without doing the clean up.
+**Troubleshooting**    |                                |         |
+DryRun                 | false                          | Bool    | When true `iasd` downloads all the items but nothing is installed/executed. If the userland phase is present `iasd` waits for agent to connect (Issue #11).
 
 Example: [SampleOptions.plist](SampleOptions.plist).
 
@@ -246,8 +246,8 @@ You need to change the identifier in **all** of the following places:
 
 IAS downloads the files in parallel. There are two options to control this bahavior:
 
-- At the start of preflight and setupassistant phases number of allowed concurrent downloads starts at `MinimumDownloadConcurrency`.
-- With each completed download **level of concurrency is increased by one** until the `MaximumDownloadConcurrency` is reached.
+- At the start of preflight and setupassistant phases number of allowed concurrent downloads starts at `MinDownloadConcurrency`.
+- With each completed download **level of concurrency is increased by one** until the `MaxDownloadConcurrency` is reached.
 
 
 ## JSON control file

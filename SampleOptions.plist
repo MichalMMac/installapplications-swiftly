@@ -10,7 +10,7 @@
 	<string>password</string>
 	<key>HashCheckPolicy</key>
 	<string>Strict</string>
-	<key>IASPath</key>
+	<key>InstallPath</key>
 	<string>/Library/installapplications</string>
 	<key>Identifier</key>
 	<string>cz.macadmin.ias</string>
@@ -20,9 +20,9 @@
 	<string>cz.macadmin.iasd</string>
 	<key>LaunchAgentIdentifier</key>
 	<string>cz.macadmin.iasagent</string>
-	<key>MinimumDownloadConcurrency</key>
+	<key>MinDownloadConcurrency</key>
 	<integer>1</integer>
-	<key>MaximumDownloadConcurrency</key>
+	<key>MaxDownloadConcurrency</key>
 	<integer>4</integer>
 	<key>MaximumRedownloads</key>
 	<integer>3</integer>
