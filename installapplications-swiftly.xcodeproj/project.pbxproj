@@ -62,6 +62,7 @@
 		90939E4D25D6726F00433A71 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		90939E5925D678E200433A71 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		90939E6225D6D04800433A71 /* DaemonXPC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaemonXPC.swift; sourceTree = "<group>"; };
+		909BB0EF26011CCC00B8B883 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		90ADACF425BD59E600ABA71C /* iasd */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = iasd; sourceTree = BUILT_PRODUCTS_DIR; };
 		90ADACF725BD59E600ABA71C /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		90EF203925E1129000F35AD4 /* RootScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootScript.swift; sourceTree = "<group>"; };
@@ -118,6 +119,7 @@
 				90939E4C25D6726F00433A71 /* iasagent */,
 				90ADACF525BD59E600ABA71C /* Products */,
 				906D961C25D9840600EE287A /* SampleOptions.plist */,
+				909BB0EF26011CCC00B8B883 /* README.md */,
 				903E925C25EC0B9700411AE5 /* munkipkg */,
 			);
 			sourceTree = "<group>";
