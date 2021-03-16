@@ -26,7 +26,7 @@ class InstallApplicationSwiftly {
         if arguments.count > 1 {
             configFile = URL(fileURLWithPath: arguments[1])
         } else {
-            configFile = URL(fileURLWithPath: arguments[0]).deletingLastPathComponent().appendingPathComponent("ias.plist")
+            configFile = URL(fileURLWithPath: arguments[0]).deletingLastPathComponent().appendingPathComponent(daemonConfigFileName)
         }
         options = loadOptions(fromFile: configFile)
 

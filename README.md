@@ -105,7 +105,7 @@ Alternatively you can use `munkipkg` directory from the git repository itself. H
 
 Currently there are two ways to provide configuration for IAS.
 
-1. Put the file named `ias.plist`into the directory containing `iasd` binary.
+1. Put the file named `iasd.plist`into the directory containing `iasd` binary.
 2. Provide path to config plist as a first argument of `iasd`. This means editing the LaunchDaemon plist:
 
 ```xml
