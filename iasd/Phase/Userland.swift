@@ -34,7 +34,11 @@ class Userland: Phase {
             logger.log("No Userland items found. Skipping")
             return
         }
-        ias.xpcServer!.waitForConnection()
+
+        // Wait for the agent to connect unless in DryRun
+        if !ias.options.dryRun {
+            ias.xpcServer!.waitForConnection()
+        }
         runItems()
     }
 }
