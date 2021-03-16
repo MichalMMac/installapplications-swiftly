@@ -113,8 +113,10 @@ class InstallApplicationSwiftly {
         let userlandPhase = Userland(itemList: controlData.userland)
 
         // Start dowloding data for SetupAssistant and Userland phases asynchronously
-        setupAssistantPhase.downloadResources()
-        userlandPhase.downloadResources()
+        DispatchQueue.global().async {
+            setupAssistantPhase.downloadResources()
+            userlandPhase.downloadResources()
+        }
 
         // Run SetupAssistant phase
         setupAssistantPhase.begin()
