@@ -425,6 +425,8 @@ Example
    This is probably by mistake, `parallel_group` identifier should be gamma.
    IAS treats this as third parallel group regardless of the name because there are other non-alpha items in between.
 
+There is not much gain from trying to install multiple packages in parallel.
+macOS `installer` installs only one package at the time.
 
 ## HTTP behavior
 
