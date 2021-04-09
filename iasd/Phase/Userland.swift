@@ -12,7 +12,7 @@ class Userland: Phase {
 
     init(itemList: [JsonItem]?) {
         super.init()
-        logger = Logger(subsystem: ias.options.identifier, category: "userland")
+        logger = Logger(subsystem: settings.identifier, category: "userland")
 
         for item in itemList ?? [] {
             switch item.type {
@@ -36,7 +36,7 @@ class Userland: Phase {
         }
 
         // Wait for the agent to connect unless in DryRun
-        if !ias.options.dryRun {
+        if !settings.dryRun {
             ias.xpcServer!.waitForConnection()
         }
         runItems()

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9032F65A26050FF0003503EB /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9032F65926050FF0003503EB /* Settings.swift */; };
 		903E926325EC0D3B00411AE5 /* Process.swift in Sources */ = {isa = PBXBuildFile; fileRef = 903E926225EC0D3B00411AE5 /* Process.swift */; };
 		903E926425EC0D3B00411AE5 /* Process.swift in Sources */ = {isa = PBXBuildFile; fileRef = 903E926225EC0D3B00411AE5 /* Process.swift */; };
 		903E926A25EC0D9000411AE5 /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 903E926925EC0D9000411AE5 /* Protocols.swift */; };
@@ -142,6 +143,7 @@
 				90939E6225D6D04800433A71 /* DaemonXPC.swift */,
 				906D961825D9839500EE287A /* Decoding.swift */,
 				90EF204F25E11EC100F35AD4 /* Utils.swift */,
+				9032F65926050FF0003503EB /* Settings.swift */,
 			);
 			path = iasd;
 			sourceTree = "<group>";
@@ -273,6 +275,7 @@
 				90583DEB25CEFB1E0010498A /* Phase.swift in Sources */,
 				90EF205925E1248A00F35AD4 /* SetupAssistant.swift in Sources */,
 				90EF205025E11EC100F35AD4 /* Utils.swift in Sources */,
+				9032F65A26050FF0003503EB /* Settings.swift in Sources */,
 				903E926325EC0D3B00411AE5 /* Process.swift in Sources */,
 				90939E5A25D678E200433A71 /* Constants.swift in Sources */,
 				90ADACF825BD59E600ABA71C /* main.swift in Sources */,

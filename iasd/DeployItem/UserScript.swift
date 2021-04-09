@@ -16,7 +16,7 @@ class UserScript: DeployItem {
             return
         }
 
-        if ias.options.dryRun {
+        if settings.dryRun {
             logger.log("\(self.name, privacy: .public): Dry run executing user script \(self.filePath, privacy: .public)")
         } else {
             returnCode = ias.xpcServer!.runUserScript(scriptURL: fileURL, async: async)

@@ -12,7 +12,7 @@ class SetupAssistant: Phase {
 
     init(itemList: [JsonItem]?) {
         super.init()
-        logger =  Logger(subsystem: ias.options.identifier, category: "setupassistant")
+        logger =  Logger(subsystem: settings.identifier, category: "setupassistant")
 
         for item in itemList ?? [] {
             switch item.type {

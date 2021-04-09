@@ -15,7 +15,7 @@ class Phase {
     var items: [DeployItem] = []
 
     init() {
-        logger = Logger(subsystem: ias.options.identifier, category: "phase")
+        logger = Logger(subsystem: settings.identifier, category: "phase")
     }
 
     func proceedAfterExecution(name: String, state: ItemState, policy: ItemFailPolicy) -> Bool {

@@ -32,7 +32,7 @@ class Preflight: Phase {
 
     init(itemList: [JsonItem]?) {
         super.init()
-        logger = Logger(subsystem: ias.options.identifier, category: "preflight")
+        logger = Logger(subsystem: settings.identifier, category: "preflight")
 
         for item in itemList ?? [] {
             switch item.type {

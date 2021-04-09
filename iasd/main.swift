@@ -10,31 +10,20 @@ import os
 
 class InstallApplicationSwiftly {
 
-    let configFile: URL
     let fileManager: FileManager
     let launchAgentPlist: URL
     let launchDaemonPlist: URL
     let logger: Logger
-    let options: Options
 
     var xpcServer: DaemonXPCServer?
     var xpcListner: NSXPCListener?
 
     init() {
-        // Load settings
-        let arguments = CommandLine.arguments
-        if arguments.count > 1 {
-            configFile = URL(fileURLWithPath: arguments[1])
-        } else {
-            configFile = URL(fileURLWithPath: arguments[0]).deletingLastPathComponent().appendingPathComponent(daemonConfigFileName)
-        }
-        options = loadOptions(fromFile: configFile)
-
         // Set variables
-        logger = Logger(subsystem: options.identifier, category: "main")
+        logger = Logger(subsystem: settings.identifier, category: "main")
         fileManager = FileManager()
-        launchDaemonPlist = URL(fileURLWithPath: "/Library/LaunchDaemons").appendingPathComponent(options.launchDaemonIdentifier).appendingPathExtension("plist")
-        launchAgentPlist = URL(fileURLWithPath: "/Library/LaunchAgents").appendingPathComponent(options.launchAgentIdentifier).appendingPathExtension("plist")
+        launchDaemonPlist = URL(fileURLWithPath: "/Library/LaunchDaemons").appendingPathComponent(settings.launchDaemonIdentifier).appendingPathExtension("plist")
+        launchAgentPlist = URL(fileURLWithPath: "/Library/LaunchAgents").appendingPathComponent(settings.launchAgentIdentifier).appendingPathExtension("plist")
     }
 
     func startXPCListener() {
@@ -47,19 +36,18 @@ class InstallApplicationSwiftly {
 
     func checkRoot() {
         let user = NSUserName()
-        if user != "root" && !options.dryRun {
+        if user != "root" && !settings.dryRun {
             logger.error("iasd must be run as root user! Current user: \(user, privacy: .public)")
             exit(1)
         }
     }
 
     func createDirectories() {
-        logger.info("InstallApplications-Swiftly path: \(self.options.iasPath, privacy: .public)")
-        let iasDirectoryURL = URL(fileURLWithPath: options.iasPath)
+        logger.info("InstallApplications-Swiftly path: \(settings.iasPath, privacy: .public)")
         do {
-            try fileManager.createDirectory(at: iasDirectoryURL, withIntermediateDirectories: true, attributes: [FileAttributeKey.posixPermissions: 0o755])
+            try fileManager.createDirectory(at: settings.iasPath, withIntermediateDirectories: true, attributes: [FileAttributeKey.posixPermissions: 0o755])
             // Crate IAS userscripts directory for backward compatibility
-            try fileManager.createDirectory(at: iasDirectoryURL.appendingPathComponent("userscripts"), withIntermediateDirectories: true, attributes: [FileAttributeKey.posixPermissions: 0o755])
+            try fileManager.createDirectory(at: settings.iasPath.appendingPathComponent("userscripts"), withIntermediateDirectories: true, attributes: [FileAttributeKey.posixPermissions: 0o755])
         } catch {
             logger.error("Unable to crate directories: \(String(describing: error), privacy: .public)")
         }
@@ -73,13 +61,12 @@ class InstallApplicationSwiftly {
         logger.log("Beginning InstallApplications-Swiftly run")
 
         // Prepare conrol JSON URLs
-        let jsonDownloadURL = URL(string: options.jsonURL)!
-        let jsonFileURL = URL(fileURLWithPath: options.iasPath).appendingPathComponent(jsonDownloadURL.lastPathComponent)
+        let jsonFileURL =  settings.iasPath.appendingPathComponent(settings.jsonURL!.lastPathComponent)
 
         // Download and parse control JSON
         logger.info("JSON path: \(jsonFileURL.path, privacy: .public)")
-        let control = JSONControlItem(downloadURL: jsonDownloadURL, fileURL: jsonFileURL, name: "JSON control")
-        if !options.skipJSONValidation && control.fileExists() {
+        let control = JSONControlItem(downloadURL: settings.jsonURL!, fileURL: jsonFileURL, name: "JSON control")
+        if !settings.skipJSONValidation && control.fileExists() {
             logger.log("Removing the existing JSON control file")
             control.removeFile()
         }
@@ -90,8 +77,8 @@ class InstallApplicationSwiftly {
         let controlData = control.parse()
 
         // Set download concurrency for Preflight phase
-        DeployItem.maximumDownloadConcurrency = options.maxDownloadConcurrency
-        DeployItem.resetDownloadConcurrency(value: options.minDownloadConcurrency)
+        DeployItem.maximumDownloadConcurrency = settings.maxDownloadConcurrency
+        DeployItem.resetDownloadConcurrency(value: settings.minDownloadConcurrency)
 
         // Run preflight phase
         let prelightPhase = Preflight(itemList: controlData.preflight)
@@ -107,7 +94,7 @@ class InstallApplicationSwiftly {
         }
 
         // Reset download concurrency for SetupAssistant and Userland phases
-        DeployItem.resetDownloadConcurrency(value: options.minDownloadConcurrency)
+        DeployItem.resetDownloadConcurrency(value: settings.minDownloadConcurrency)
 
         let setupAssistantPhase = SetupAssistant(itemList: controlData.setupassistant)
         let userlandPhase = Userland(itemList: controlData.userland)
@@ -136,18 +123,18 @@ class InstallApplicationSwiftly {
 
         // Unload LaunchAgent
         if xpcServer!.agentConnector.connection != nil && xpcServer!.agentConnector.uid != nil {
-            logger.info("Attempting to unload LaunchAgent \(self.options.launchAgentIdentifier, privacy: .public)")
+            logger.info("Attempting to unload LaunchAgent \(settings.launchAgentIdentifier, privacy: .public)")
             let agentUnload = Process()
             agentUnload.executableURL = URL(fileURLWithPath: "/bin/launchctl")
-            agentUnload.arguments = ["bootout", "gui/\(String(xpcServer!.agentConnector.uid!))/\(self.options.launchAgentIdentifier)"]
+            agentUnload.arguments = ["bootout", "gui/\(String(xpcServer!.agentConnector.uid!))/\(settings.launchAgentIdentifier)"]
             _ = executeProcess(task: agentUnload, logger: logger, async: false)
         }
 
         // Clean UP IAS directory
-        try? fileManager.removeItem(atPath: options.iasPath)
+        try? fileManager.removeItem(at: settings.iasPath)
 
         // Trigger delayed reboot
-        if options.reboot {
+        if settings.reboot {
             logger.log("Triggering reboot")
             let delayedReboot = Process()
             delayedReboot.executableURL = URL(fileURLWithPath: "/bin/zsh")
@@ -156,10 +143,10 @@ class InstallApplicationSwiftly {
         }
 
         // Unload LaunchDaemon
-        logger.info("Attempting to unload LaunchDaemon \(self.options.launchDaemonIdentifier, privacy: .public)")
+        logger.info("Attempting to unload LaunchDaemon \(settings.launchDaemonIdentifier, privacy: .public)")
         let daemonUnload = Process()
         daemonUnload.executableURL = URL(fileURLWithPath: "/bin/launchctl")
-        daemonUnload.arguments = ["bootout", "system/\(self.options.launchDaemonIdentifier)"]
+        daemonUnload.arguments = ["bootout", "system/\(settings.launchDaemonIdentifier)"]
         _ = executeProcess(task: daemonUnload, logger: logger, async: true)
     }
 
@@ -169,6 +156,9 @@ class InstallApplicationSwiftly {
         exit(Int32(exitCode))
     }
 }
+
+let settings = Settings()
+settings.check()
 
 let ias = InstallApplicationSwiftly()
 ias.checkRoot()

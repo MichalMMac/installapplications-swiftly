@@ -11,7 +11,7 @@ import os
 @objc class AgentXPCConnector: NSObject, IASDaemonXPCProtocol {
 
     let connectionEstablished = DispatchSemaphore(value: 0)
-    let logger = Logger(subsystem: ias.options.identifier, category: "xpc")
+    let logger = Logger(subsystem: settings.identifier, category: "xpc")
     var connection: NSXPCConnection?
     var uid: Int?
 
@@ -34,7 +34,7 @@ import os
 class DaemonXPCServer : NSObject, NSXPCListenerDelegate {
 
     let agentConnector = AgentXPCConnector()
-    let logger = Logger(subsystem: ias.options.identifier, category: "xpc")
+    let logger = Logger(subsystem: settings.identifier, category: "xpc")
 
     func waitForConnection() {
         let wakeInterval = 600
@@ -51,7 +51,7 @@ class DaemonXPCServer : NSObject, NSXPCListenerDelegate {
                 logger.log("Still waiting for the agent connection")
             }
             timeOutCounter += wakeInterval
-        } while timeOutCounter < ias.options.waitForAgentTimeout
+        } while timeOutCounter < settings.waitForAgentTimeout
 
         logger.error("Timed out while waiting for the agent connection")
         exit(1)
@@ -68,7 +68,7 @@ class DaemonXPCServer : NSObject, NSXPCListenerDelegate {
             exit(1)
         }
 
-        service!.executeUserScript(scriptURL: scriptURL, identifier: ias.options.identifier, async: async) { (reply) in
+        service!.executeUserScript(scriptURL: scriptURL, identifier: settings.identifier, async: async) { (reply) in
             exitCode = reply
             self.logger.debug("Finished Userscript XPC")
         }

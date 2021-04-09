@@ -67,8 +67,8 @@ class DeployItem: NSObject, URLSessionTaskDelegate, URLSessionDownloadDelegate  
     private lazy var session = URLSession(configuration: .default, delegate: self,  delegateQueue: nil)
 
     var filePermissions: Int { 0o644 }
-    var logger = Logger(subsystem: ias.options.identifier, category: "item")
-    var reDownloadCounter = ias.options.redownloads
+    var logger = Logger(subsystem: settings.identifier, category: "item")
+    var reDownloadCounter = settings.redownloads
     var returnCode = 0
     var state = ItemState.initialized
 
@@ -190,8 +190,8 @@ class DeployItem: NSObject, URLSessionTaskDelegate, URLSessionDownloadDelegate  
         if failed {
             reDownload()
         } else {
-            switch ias.options.hashCheckPolicy {
-            case .strict:
+            switch settings.hashCheckPolicy {
+            case .strict, .invalid:
                 if let hash = self.expectedHash {
                     if self.compareFileWithExpectedHash(hash) {
                         approveDownload()
@@ -255,13 +255,13 @@ class DeployItem: NSObject, URLSessionTaskDelegate, URLSessionDownloadDelegate  
 
         switch challenge.protectionSpace.authenticationMethod {
         case NSURLAuthenticationMethodHTTPBasic, NSURLAuthenticationMethodHTTPDigest:
-            guard ias.options.httpAuthUser != nil && ias.options.httpAuthPassword != nil else {
+            guard settings.httpAuthUser != nil && settings.httpAuthPassword != nil else {
                 logger.error("\(self.name, privacy: .public): HTTP authentication required but credentials not configured")
                 completionHandler(.cancelAuthenticationChallenge, nil)
                 return
             }
             if challenge.previousFailureCount == 0 {
-                let credential = URLCredential(user: ias.options.httpAuthUser!, password: ias.options.httpAuthPassword!, persistence: .forSession)
+                let credential = URLCredential(user: settings.httpAuthUser!, password: settings.httpAuthPassword!, persistence: .forSession)
                 completionHandler(.useCredential, credential)
             } else {
                 completionHandler(.cancelAuthenticationChallenge, nil)

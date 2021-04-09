@@ -16,7 +16,7 @@ class RootScript: DeployItem {
             return
         }
 
-        if ias.options.dryRun {
+        if settings.dryRun {
             logger.log("\(self.name, privacy: .public): Dry run executing root script \(self.filePath, privacy: .public)")
         } else {
             logger.log("\(self.name, privacy: .public): Initiating root script \(self.filePath, privacy: .public)")

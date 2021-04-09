@@ -53,7 +53,7 @@ class Package: DeployItem {
     }
 
     func install() {
-        if ias.options.dryRun {
+        if settings.dryRun {
             logger.log("\(self.name, privacy: .public): Dry run installing package \(self.filePath, privacy: .public)")
         } else {
             logger.log("\(self.name, privacy: .public): Installing package \(self.filePath, privacy: .public)")
