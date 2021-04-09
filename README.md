@@ -90,10 +90,15 @@ Running items in the `userland` phase is extremely useful for situations where b
 
 ### Deploying release package
 
-**NOT YET IMPLEMENTED**
+When IAS is configured only using the configuration profile from MDM you can deploy release package without any modifications.
+You need to make sure MDM issues command to install the configuration profile **before** the command to install the IAS package.
 
-~When IAS is configured only using the configuration profile from MDM you can deploy release package without any modifications.
-You need to make sure MDM issues command to install the configuration profile **before** the command to install the IAS package.~
+#### Using the configuration profile
+
+You can use macOS `UserDefaults` to provide the settings for IAS. To do that just set the settings keys for domain: `cz.macadmin.iasd`.
+It makes sense to deploy the settings via the configuration profile pushed by the MDM.
+
+Example: [SampleProfile.mobileconfig](SampleProfile.mobileconfig).
 
 ### Preparing custom package
 
@@ -103,7 +108,7 @@ Alternatively you can use `munkipkg` directory from the git repository itself. H
 
 #### Adding the configuration
 
-Currently there are two ways to provide configuration for IAS.
+You can provide the configuration using the plist file bundled within the package.
 
 1. Put the file named `iasd.plist`into the directory containing `iasd` binary.
 2. Provide path to config plist as a first argument of `iasd`. This means editing the LaunchDaemon plist:
@@ -118,6 +123,8 @@ Currently there are two ways to provide configuration for IAS.
 ```
 
 If for some reason you manage do do both, file provided as an argument takes precedence.
+
+Example: [SampleOptions.plist](SampleOptions.plist).
 
 #### Signing
 
@@ -154,7 +161,7 @@ Inspect `man pkgbuild` and  corresponding `munkipkg` [documentation](https://git
 
 ## Settings
 
-Settings are provided by configuration plist file (section [Adding the configuration](#adding-the-configuration)).
+Settings are provided by configuration plist file (section [Adding the configuration](#adding-the-configuration)) or via the configuration profile (section [Using the configuration profile](#using-the-configuration-profile)).
 
 Setting key            | Default value                  | Type    | Description
 ---------------------- | ------------------------------ | ------- | ------------
@@ -177,7 +184,13 @@ WaitForAgentTimeout    | 86400                          | Integer | Amount of ti
 **Troubleshooting**    |                                |         |
 DryRun                 | false                          | Bool    | When true `iasd` downloads all the items but nothing is installed/executed. If the userland phase is present `iasd` waits for agent to connect (Issue #11).
 
-Example: [SampleOptions.plist](SampleOptions.plist).
+### Settings priority
+
+Settings can be loaded from multiple sources. Priority
+
+1. Configuration file
+2. UserDefaults (configuration profile)
+3. IAS default value
 
 ### Hack check policy
 
