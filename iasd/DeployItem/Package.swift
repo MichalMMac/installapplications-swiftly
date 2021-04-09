@@ -7,6 +7,14 @@
 
 import Foundation
 
+// Parsing pkgutil plist output
+struct pkgInfoPlist: Decodable {
+    enum CodingKeys: String, CodingKey {
+        case pkgVersion = "pkg-version"
+    }
+    let pkgVersion: String
+}
+
 class Package: DeployItem {
 
     let version: String?
