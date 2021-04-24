@@ -12,6 +12,8 @@ class RootScript: DeployItem {
     override var filePermissions: Int { 0o700 }
 
     override func execute() {
+        ias.reporter.beginStep(name: "Running system script: \(self.name)")
+
         guard executeCommon() else {
             return
         }

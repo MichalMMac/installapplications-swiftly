@@ -12,6 +12,8 @@ class UserScript: DeployItem {
     override var filePermissions: Int { 0o755 }
 
     override func execute() {
+        ias.reporter.beginStep(name: "Running user script: \(self.name)")
+
         guard executeCommon() else {
             return
         }

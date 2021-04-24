@@ -57,6 +57,7 @@ class Preflight: Phase {
             self.dispatchGroup.enter()
             DispatchQueue.global().async {
                 item.execute()
+                ias.reporter.completeStep(name: "Finished: \(item.name)")
                 if !self.proceedAfterExecution(name: item.name, state: item.state, policy: item.failPolicy) {
                     exitSignal = true
                 }

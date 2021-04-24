@@ -75,6 +75,10 @@ struct JsonLists: Decodable {
     let preflight: [JsonItem]?
     let setupassistant: [JsonItem]?
     let userland: [JsonItem]?
+
+    func totalItemCount() -> Int {
+        return (preflight?.count ?? 0) + (setupassistant?.count ?? 0) + (userland?.count ?? 0)
+    }
 }
 
 class JSONControlItem : DeployItem {

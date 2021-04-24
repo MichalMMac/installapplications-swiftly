@@ -74,6 +74,7 @@ class Phase {
                 logger.log("\(item.name, privacy: .public): Starting parallel run (group: \(parallelGroup, privacy: .public)")
                 DispatchQueue.global().async {
                     item.execute()
+                    ias.reporter.completeStep(name: "Finished: \(item.name)")
                     if !self.proceedAfterExecution(name: item.name, state: item.state, policy: item.failPolicy) {
                         exitSignal = true
                     }
@@ -82,6 +83,7 @@ class Phase {
             } else {
                 logger.log("\(item.name, privacy: .public): Starting \(item.async ? "asynchronous" : "synchronous", privacy: .public) run")
                 item.execute()
+                ias.reporter.completeStep(name: "Finished: \(item.name)")
                 if !proceedAfterExecution(name: item.name, state: item.state, policy: item.failPolicy) {
                     exitSignal = true
                     break executionLoop

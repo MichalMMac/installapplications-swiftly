@@ -14,6 +14,7 @@ class InstallApplicationSwiftly {
     let launchAgentPlist: URL
     let launchDaemonPlist: URL
     let logger: Logger
+    let reporter = Reporter()
 
     var xpcServer: DaemonXPCServer?
     var xpcListner: NSXPCListener?
@@ -24,6 +25,9 @@ class InstallApplicationSwiftly {
         fileManager = FileManager()
         launchDaemonPlist = URL(fileURLWithPath: "/Library/LaunchDaemons").appendingPathComponent(settings.launchDaemonIdentifier).appendingPathExtension("plist")
         launchAgentPlist = URL(fileURLWithPath: "/Library/LaunchAgents").appendingPathComponent(settings.launchAgentIdentifier).appendingPathExtension("plist")
+        if settings.DEPNotifyEnable {
+            reporter.add(module: DEPNotify())
+        }
     }
 
     func startXPCListener() {
@@ -54,9 +58,11 @@ class InstallApplicationSwiftly {
     }
 
     func beginRun() {
+        // Launch reporter thread
+        reporter.runAsync()
 
         // Crate necessary directories
-        self.createDirectories()
+        createDirectories()
 
         logger.log("Beginning InstallApplications-Swiftly run")
 
@@ -75,6 +81,7 @@ class InstallApplicationSwiftly {
         control.execute() // Wait for download to complete
 
         let controlData = control.parse()
+        reporter.setStep(count: controlData.totalItemCount())
 
         // Set download concurrency for Preflight phase
         DeployItem.maximumDownloadConcurrency = settings.maxDownloadConcurrency
@@ -151,6 +158,7 @@ class InstallApplicationSwiftly {
     }
 
     func quit(exitCode: Int) {
+        reporter.resetStep()
         finish()
         logger.log("Exiting with code: \(exitCode, privacy: .public)")
         exit(Int32(exitCode))

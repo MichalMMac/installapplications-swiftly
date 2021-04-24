@@ -77,6 +77,8 @@ class Package: DeployItem {
     }
 
     override func execute() {
+        ias.reporter.beginStep(name: "Installing package: \(self.name)")
+
         guard executeCommon() else {
             return
         }
