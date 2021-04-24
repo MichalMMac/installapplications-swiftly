@@ -72,3 +72,47 @@ extension Data {
         }
     }
 }
+
+struct SharedQueue<T> {
+    private var array = [T]()
+    private let access = DispatchSemaphore(value: 1)
+
+    public var count: Int {
+        access.wait()
+        let count = array.count
+        access.signal()
+        return count
+    }
+
+    public var isEmpty: Bool {
+        access.wait()
+        let isEmpty = array.isEmpty
+        access.signal()
+        return isEmpty
+    }
+
+    public mutating func enqueue(_ element: T) {
+        access.wait()
+        array.append(element)
+        access.signal()
+    }
+
+    public mutating func dequeue() -> T? {
+        let item: T?
+        access.wait()
+        if array.isEmpty {
+            item = nil
+        } else {
+            item = array.removeFirst()
+        }
+        access.signal()
+        return item
+    }
+
+    public var front: T? {
+        access.wait()
+        let item = array.first
+        access.signal()
+        return item
+    }
+}
