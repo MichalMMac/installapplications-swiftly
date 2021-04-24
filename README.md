@@ -181,6 +181,10 @@ MaxDownloadConcurrency | 4                              | Integer | See section 
 MaximumRedownloads     | 3                              | Integer | Maximum number of redownload attempts.
 SkipJSONValidation     | false                          | Bool    | When true the JSON control file is not deleted and redowloaded if found inside the `InstallPath` directory at begging of the `iasd` run.
 WaitForAgentTimeout    | 86400                          | Integer | Amount of time in seconds indicating how long `iasd` is willing to wait for `iasagent` to connect when beginning the userland phase. When reached, `iasd` exits without doing the clean up.
+**Reporting**          |                                |         |
+DEPNotifyEnable        | false                          | Bool    | Enable reporting to DEPNotify control file
+DEPNotifyControlFile   | `/var/tmp/depnotify.log`       | String  | Path to DEPNotify control file. IAS will attempt to create the file if it does not exists but not the parent directory.
+DEPNotifyDeterminate   | true                           | Bool    | Set the DEPNotify `DeterminateManualStep` to the number of items in the JSON control file.
 **Troubleshooting**    |                                |         |
 DryRun                 | false                          | Bool    | When true `iasd` downloads all the items but nothing is installed/executed. If the userland phase is present `iasd` waits for agent to connect (Issue #11).
 
@@ -261,6 +265,14 @@ IAS downloads the files in parallel. There are two options to control this bahav
 
 - At the start of preflight and setupassistant phases number of allowed concurrent downloads starts at `MinDownloadConcurrency`.
 - With each completed download **level of concurrency is increased by one** until the `MaxDownloadConcurrency` is reached.
+
+### DEPNotify support
+
+When enabled (`DEPNotifyEnable`) IAS can write status messages to the DEPNotify control file (`DEPNotifyControlFile`).
+IAS also manipulates the DEPNotify progress bar using determinate feature (`DEPNotifyDeterminate`).
+
+Please note IAS does not launch or quit the DEPNotify application. Setting that up is completely
+up to the administrator.
 
 
 ## JSON control file

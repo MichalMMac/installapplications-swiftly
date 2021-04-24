@@ -53,6 +53,9 @@ enum HashCheckPolicy: String, Decodable {
 struct SettingFile: Decodable {
 
     enum CodingKeys: String, CodingKey {
+        case DEPNotifyEnable = "DEPNotifyEnable"
+        case DEPNotifyControlFile = "DEPNotifyControlFile"
+        case DEPNotifyDeterminate = "DEPNotifyDeterminate"
         case dryRun = "DryRun"
         case hashCheckPolicy = "HashCheckPolicy"
         case iasPath = "InstallPath"
@@ -70,6 +73,9 @@ struct SettingFile: Decodable {
         case jsonURL = "JSONURL"
     }
 
+    let DEPNotifyEnable: Bool?
+    let DEPNotifyControlFile: String?
+    let DEPNotifyDeterminate: Bool?
     let dryRun: Bool?
     let hashCheckPolicy: HashCheckPolicy
     let iasPath: String?
@@ -88,6 +94,9 @@ struct SettingFile: Decodable {
 }
 
 class Settings {
+    var DEPNotifyEnable = false
+    var DEPNotifyControlFile = URL(fileURLWithPath: "/var/tmp/depnotify.log")
+    var DEPNotifyDeterminate = true
     var dryRun = false
     var hashCheckPolicy = HashCheckPolicy.strict
     var iasPath = URL(fileURLWithPath: defaultInstallPath)
@@ -115,6 +124,9 @@ class Settings {
         case defaults = "macOS UserDefaults"
     }
 
+    var DEPNotifyEnableSource = SettingSource.preconfigured
+    var DEPNotifyControlFileSource = SettingSource.preconfigured
+    var DEPNotifyDeterminateSource = SettingSource.preconfigured
     var dryRunSource = SettingSource.preconfigured
     var hashCheckPolicySource = SettingSource.preconfigured
     var iasPathSource = SettingSource.preconfigured
@@ -146,6 +158,9 @@ class Settings {
     }
 
     func printSettings() {
+        logger.debug("DEPNotifyEnable: \(self.DEPNotifyEnable, privacy: .public) Source: \(self.DEPNotifyEnableSource.rawValue, privacy: .public)")
+        logger.debug("DEPNotifyControlFile: \(self.DEPNotifyControlFile, privacy: .public) Source: \(self.DEPNotifyControlFileSource.rawValue, privacy: .public)")
+        logger.debug("DEPNotifyDeterminate: \(self.DEPNotifyDeterminate, privacy: .public) Source: \(self.DEPNotifyDeterminateSource.rawValue, privacy: .public)")
         logger.debug("HashCheckPolicy: \(self.hashCheckPolicy.rawValue, privacy: .public) Source: \(self.hashCheckPolicySource.rawValue, privacy: .public)")
         logger.debug("HTTPAuthPassword: <REDACTED> Source: \(self.httpAuthPasswordSource.rawValue, privacy: .public)")
         logger.debug("HTTPAuthUser: <REDACTED> Source: \(self.httpAuthUserSource.rawValue, privacy: .public)")
@@ -187,7 +202,18 @@ class Settings {
             logger.error("Unable to parse config file")
             return
         }
-
+        if let value = settingsFromFile.DEPNotifyEnable {
+            DEPNotifyEnable = value
+            DEPNotifyEnableSource = .file
+        }
+        if let value = settingsFromFile.DEPNotifyControlFile {
+            DEPNotifyControlFile = URL(fileURLWithPath: value)
+            DEPNotifyControlFileSource = .file
+        }
+        if let value = settingsFromFile.DEPNotifyDeterminate {
+            DEPNotifyDeterminate = value
+            DEPNotifyDeterminateSource = .file
+        }
         if let value = settingsFromFile.dryRun {
             dryRun = value
             dryRunSource = .file
@@ -254,6 +280,18 @@ class Settings {
     func loadSettingsFromUserDefaults() {
         logger.debug("Attempting to load setting from UserDefaults domain: \(defaultDaemonIdentifier, privacy: .public)")
         if let defaults = UserDefaults(suiteName: defaultDaemonIdentifier) {
+            if let value = defaults.optionalBool(forKey: "DEPNotifyEnable") {
+                DEPNotifyEnable = value
+                DEPNotifyEnableSource = .defaults
+            }
+            if let value = defaults.string(forKey: "DEPNotifyControlFile") {
+                DEPNotifyControlFile = URL(fileURLWithPath: value)
+                DEPNotifyControlFileSource = .defaults
+            }
+            if let value = defaults.optionalBool(forKey: "DEPNotifyDeterminate") {
+                DEPNotifyDeterminate = value
+                DEPNotifyDeterminateSource = .defaults
+            }
             if let value = defaults.optionalBool(forKey: "DryRun") {
                 dryRun = value
                 dryRunSource = .defaults
