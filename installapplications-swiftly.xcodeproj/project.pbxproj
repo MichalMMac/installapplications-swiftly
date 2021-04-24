@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		9032F65A26050FF0003503EB /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9032F65926050FF0003503EB /* Settings.swift */; };
+		9034076F2632E87600D04BDB /* Reporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9034076E2632E87600D04BDB /* Reporter.swift */; };
+		903407732632E8D200D04BDB /* DEPNotify.swift in Sources */ = {isa = PBXBuildFile; fileRef = 903407722632E8D200D04BDB /* DEPNotify.swift */; };
 		903E926325EC0D3B00411AE5 /* Process.swift in Sources */ = {isa = PBXBuildFile; fileRef = 903E926225EC0D3B00411AE5 /* Process.swift */; };
 		903E926425EC0D3B00411AE5 /* Process.swift in Sources */ = {isa = PBXBuildFile; fileRef = 903E926225EC0D3B00411AE5 /* Process.swift */; };
 		903E926A25EC0D9000411AE5 /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 903E926925EC0D9000411AE5 /* Protocols.swift */; };
@@ -52,6 +54,8 @@
 
 /* Begin PBXFileReference section */
 		9032F65926050FF0003503EB /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		9034076E2632E87600D04BDB /* Reporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reporter.swift; sourceTree = "<group>"; };
+		903407722632E8D200D04BDB /* DEPNotify.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DEPNotify.swift; sourceTree = "<group>"; };
 		903E925C25EC0B9700411AE5 /* munkipkg */ = {isa = PBXFileReference; lastKnownFileType = folder; path = munkipkg; sourceTree = "<group>"; };
 		903E926225EC0D3B00411AE5 /* Process.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Process.swift; sourceTree = "<group>"; };
 		903E926925EC0D9000411AE5 /* Protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
@@ -93,6 +97,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9034076D2632E85600D04BDB /* Reporter */ = {
+			isa = PBXGroup;
+			children = (
+				9034076E2632E87600D04BDB /* Reporter.swift */,
+				903407722632E8D200D04BDB /* DEPNotify.swift */,
+			);
+			path = Reporter;
+			sourceTree = "<group>";
+		};
 		903E926125EC0D0900411AE5 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
@@ -139,6 +152,7 @@
 				90ADACF725BD59E600ABA71C /* main.swift */,
 				90EF205325E1241C00F35AD4 /* Phase */,
 				90EF203625E1126C00F35AD4 /* DeployItem */,
+				9034076D2632E85600D04BDB /* Reporter */,
 				90939E6225D6D04800433A71 /* DaemonXPC.swift */,
 				90EF204F25E11EC100F35AD4 /* Utils.swift */,
 				9032F65926050FF0003503EB /* Settings.swift */,
@@ -262,10 +276,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				903407732632E8D200D04BDB /* DEPNotify.swift in Sources */,
 				90939E6325D6D04800433A71 /* DaemonXPC.swift in Sources */,
 				90EF203A25E1129000F35AD4 /* RootScript.swift in Sources */,
 				90EF205525E1244100F35AD4 /* Userland.swift in Sources */,
 				90583DF225CEFFCB0010498A /* DeployItem.swift in Sources */,
+				9034076F2632E87600D04BDB /* Reporter.swift in Sources */,
 				90EF204025E112BA00F35AD4 /* Package.swift in Sources */,
 				90EF204A25E1133B00F35AD4 /* JSONControlItem.swift in Sources */,
 				90EF205D25E124B100F35AD4 /* Preflight.swift in Sources */,
