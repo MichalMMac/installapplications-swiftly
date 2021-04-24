@@ -158,9 +158,9 @@ class InstallApplicationSwiftly {
 }
 
 let settings = Settings()
-settings.check()
-
 let ias = InstallApplicationSwiftly()
+
+settings.check()
 ias.checkRoot()
 ias.startXPCListener()
 ias.beginRun()
