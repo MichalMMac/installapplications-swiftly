@@ -129,7 +129,7 @@ class InstallApplicationSwiftly {
         try? fileManager.removeItem(at: self.launchAgentPlist)
 
         // Unload LaunchAgent
-        if xpcServer!.agentConnector.connection != nil && xpcServer!.agentConnector.uid != nil {
+        if xpcServer?.agentConnector.connection != nil && xpcServer?.agentConnector.uid != nil {
             logger.info("Attempting to unload LaunchAgent \(settings.launchAgentIdentifier, privacy: .public)")
             let agentUnload = Process()
             agentUnload.executableURL = URL(fileURLWithPath: "/bin/launchctl")
