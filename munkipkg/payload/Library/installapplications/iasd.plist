@@ -3,16 +3,16 @@
 <plist version="1.0">
 <dict>
     <!--
-	<key>JSONURL</key>
-	<string>https://your.webserver.tld/installapplications.json</string>
-	<key>HashCheckPolicy</key>
-	<string>Strict</string>
-	<key>HTTPAuthUser</key>
-	<string>user</string>
-	<key>HTTPAuthPassword</key>
-	<string>password</string>
-	<key>MaxDownloadConcurrency</key>
-	<integer>4</integer>
+    <key>JSONURL</key>
+    <string>https://your.webserver.tld/installapplications.json</string>
+    <key>HashCheckPolicy</key>
+    <string>Strict</string>
+    <key>HTTPAuthUser</key>
+    <string>user</string>
+    <key>HTTPAuthPassword</key>
+    <string>password</string>
+    <key>MaxDownloadConcurrency</key>
+    <integer>4</integer>
     -->
 </dict>
 </plist>

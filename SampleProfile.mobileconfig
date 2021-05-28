@@ -44,6 +44,8 @@
           <dict>
             <key>mcx_preference_settings</key>
             <dict>
+              <key>DEPNotifyEnable</key>
+              <false/>
               <key>DryRun</key>
               <false/>
               <key>HTTPAuthUser</key>
